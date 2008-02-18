@@ -27,6 +27,17 @@ class TestParsing < Test::Unit::TestCase
     time = parse_now("may 28 at 5:32.19pm", :context => :past)
     assert_equal Time.local(2006, 5, 28, 17, 32, 19), time
     
+    # rm_sd_on
+    
+    time = parse_now("5pm on may 28")
+    assert_equal Time.local(2007, 5, 28, 17), time
+
+    time = parse_now("5pm may 28")
+    assert_equal Time.local(2007, 5, 28, 17), time
+
+    time = parse_now("5 on may 28", :ambiguous_time_range => :none)
+    assert_equal Time.local(2007, 5, 28, 05), time
+
     # rm_od
     
     time = parse_now("may 27th")
@@ -44,6 +55,17 @@ class TestParsing < Test::Unit::TestCase
     time = parse_now("may 27th at 5", :ambiguous_time_range => :none)
     assert_equal Time.local(2007, 5, 27, 5), time
     
+    # rm_od_on
+    
+    time = parse_now("5:00 pm may 27th", :context => :past)
+    assert_equal Time.local(2006, 5, 27, 17), time
+    
+    time = parse_now("5pm on may 27th", :context => :past)
+    assert_equal Time.local(2006, 5, 27, 17), time
+    
+    time = parse_now("5 on may 27th", :ambiguous_time_range => :none)
+    assert_equal Time.local(2007, 5, 27, 5), time
+
     # rm_sy
     
     time = parse_now("June 1979")
@@ -614,6 +636,28 @@ class TestParsing < Test::Unit::TestCase
     assert_raise(Chronic::InvalidArgumentException) do
       time = Chronic.parse("may 27", :context => :bar)
     end
+  end
+  
+  def test_seasons
+    t = parse_now("this spring", :guess => false)
+    assert_equal Time.local(2007, 3, 20), t.begin
+    assert_equal Time.local(2007, 6, 20), t.end
+    
+    t = parse_now("this winter", :guess => false)
+    assert_equal Time.local(2006, 12, 22, 23), t.begin
+    assert_equal Time.local(2007, 3, 19), t.end
+    
+    t = parse_now("last spring", :guess => false)
+    assert_equal Time.local(2006, 3, 20, 23), t.begin
+    assert_equal Time.local(2006, 6, 20), t.end
+    
+    t = parse_now("last winter", :guess => false)
+    assert_equal Time.local(2005, 12, 22, 23), t.begin
+    assert_equal Time.local(2006, 3, 19, 23), t.end
+    
+    t = parse_now("next spring", :guess => false)
+    assert_equal Time.local(2007, 3, 20), t.begin
+    assert_equal Time.local(2007, 6, 20), t.end
   end
   
   # regression
