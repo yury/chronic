@@ -1,3 +1,5 @@
+require File.expand_path(File.dirname(__FILE__)) + '/../../spec_helper'
+
 describe Time, :construct do
   it "gives a time object" do
     Time.construct(2006, 1, 2, 0, 0, 0).should == Time.local(2006, 1, 2, 0, 0, 0)
