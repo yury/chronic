@@ -42,7 +42,7 @@ require 'chronic/time_zone'
 require 'numerizer/numerizer'
 
 module Chronic
-  VERSION = "0.2.3"
+  VERSION = "0.2.3" unless defined?(Chronic::VERSION)
   
   class << self
     attr_accessor :debug
