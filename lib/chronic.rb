@@ -38,6 +38,7 @@ require 'chronic/scalar'
 require 'chronic/ordinal'
 require 'chronic/separator'
 require 'chronic/time_zone'
+require 'chronic/blunt.rb'
 
 require 'numerizer/numerizer'
 
