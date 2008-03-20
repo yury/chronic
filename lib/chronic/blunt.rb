@@ -13,6 +13,8 @@
 # kindly wrote while I was troubleshooting a more verbose version
 # on #ruby-lang). (github.com/brainopia)
 #
+# TODO: group_by_range is tripping up at the start of the date collection,
+# reverted to my previous, less terse(!) method until I get it fixed.
 
   require 'rubygems'
   require 'activesupport'
@@ -23,7 +25,7 @@
     end
   end
 
-  class Array #all credit to brainopia for this wonderful method
+  class Array #all credit to brainopia for this
     def group_by_range
       uniq.sort.inject([[first]]) do |result, it|
         result << [] unless result.last.last.next == it
@@ -42,7 +44,26 @@
     def initialize
       @result = []
     end
-    
+   
+
+    def self.compare(dates0,dates1)
+      ranges = []
+      incongruous = []
+      dates0.each {|it|
+        incongruous << it unless dates1.include?(it)
+      }
+      ranges << Chronic::Blunt.range(incongruous)
+      
+      incongruous = []
+      dates1.each {|it|
+        incongruous << it unless dates0.include?(it)
+      }
+      ranges << Chronic::Blunt.range(incongruous)
+
+      @result = ranges
+    end
+
+
     def self.dates(passed_range, specified_options={})
       default_options = {:day => false,
                          :week => :every,
@@ -91,14 +112,51 @@
     end
  
     def self.range(dates, specified_options={})
-      default_options = {:csv => false}
+      default_options = {:csv => false,
+                         :start_hrs => 0,
+                         :end_hrs => 0,
+                         :time => false}
       options = default_options.merge specified_options
       
       specified_options.keys.each do |key|
         default_options.keys.include?(key) || raise(Chronic::InvalidArgumentException, "#{key} is not a valid option key.")
       end
 
-      ranges = dates.flatten.map! {|date| get_date(date) }.group_by_range.map! {|it| it.first..it.last}
+      #ranges = dates.flatten.map! {|date| get_date(date) }.group_by_range.map! do |it|
+      #  if options[:time] 
+      #    Time.parse(it.first.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs])
+      #  else
+      #    it.first..it.last
+      #  end
+      #end
+      #
+      
+      days = []
+      last_date = dates.size-1
+      dates.flatten.uniq!
+      dates.sort.each_with_index do |date,i|
+        if i == 0 && date+1 != dates[i+1]
+          days << date << date
+        elsif i == 0
+          days << date
+        elsif i == last_date && date-1 != dates[i-1]
+          days << date << date
+        elsif i == last_date
+          days << date
+        elsif date+1 != dates[i+1] && date-1 != dates[i-1]
+          days << date << date
+        elsif date+1 != dates[i+1] || date-1 != dates[i-1]
+          days << date
+        end
+      end
+      ranges = []
+      days.each_with_index do |it,i| 
+        if i%2 == 0 && options[:time]
+          ranges << (Time.parse(it.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(days[i+1].strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs]))
+        elsif i%2 == 0 
+          ranges << (it..days[i+1])
+        end
+      end
       if options[:csv]
         if options[:csv] == true
           @result = to_csv(ranges,'|')
@@ -119,6 +177,7 @@
       csv
     end
  
+
     def self.find_dates(dates,query,hour,week)
       day = Date::DAYNAMES.rindex(query)
         results = []
