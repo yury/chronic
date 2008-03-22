@@ -13,10 +13,8 @@
 # kindly wrote while I was troubleshooting a more verbose version
 # on #ruby-lang). (github.com/brainopia)
 #
-# TODO: group_by_range is tripping up at the start of the date collection,
-# reverted to my previous, less terse(!) method until I get it fixed.
 
-  require 'rubygems'
+require 'rubygems'
   require 'activesupport'
 
   class Object
@@ -27,8 +25,8 @@
 
   class Array #all credit to brainopia for this
     def group_by_range
-      uniq.sort.inject([[first]]) do |result, it|
-        result << [] unless result.last.last.next == it
+      uniq.sort.inject([]) do |result, it|
+        result << [] unless result.last && result.last.last.next == it
         result.tap {|ar| ar.last << it }
       end
     end
@@ -122,41 +120,14 @@
         default_options.keys.include?(key) || raise(Chronic::InvalidArgumentException, "#{key} is not a valid option key.")
       end
 
-      #ranges = dates.flatten.map! {|date| get_date(date) }.group_by_range.map! do |it|
-      #  if options[:time] 
-      #    Time.parse(it.first.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs])
-      #  else
-      #    it.first..it.last
-      #  end
-      #end
-      #
+      ranges = dates.flatten.map! {|it| get_date it}.group_by_range.map! do |it|
+        if options[:time] 
+          Time.parse(it.first.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs])
+        else
+          it.first..it.last
+        end
+      end
       
-      days = []
-      last_date = dates.size-1
-      dates.flatten.uniq!
-      dates.sort.each_with_index do |date,i|
-        if i == 0 && date+1 != dates[i+1]
-          days << date << date
-        elsif i == 0
-          days << date
-        elsif i == last_date && date-1 != dates[i-1]
-          days << date << date
-        elsif i == last_date
-          days << date
-        elsif date+1 != dates[i+1] && date-1 != dates[i-1]
-          days << date << date
-        elsif date+1 != dates[i+1] || date-1 != dates[i-1]
-          days << date
-        end
-      end
-      ranges = []
-      days.each_with_index do |it,i| 
-        if i%2 == 0 && options[:time]
-          ranges << (Time.parse(it.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(days[i+1].strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs]))
-        elsif i%2 == 0 
-          ranges << (it..days[i+1])
-        end
-      end
       if options[:csv]
         if options[:csv] == true
           @result = to_csv(ranges,'|')
