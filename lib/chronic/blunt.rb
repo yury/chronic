@@ -92,21 +92,27 @@ require 'rubygems'
     end
 
     def self.parse(string)
-      if (string =~ /first|second|third|fourth|last/) == 0
+      if (string =~ /first|second|third|fourth|last|every/) == 0
         query = string.gsub(/in/){}.downcase.split(/\s+/)
      
         if query[0] == 'last'
           week = -1
+        elsif query[0] == 'every'
+          week = :every
         else
           week = ORDINALS.index(query.first)
         end
         day = query[1].titleize
         month = Date.parse("#{query[3]}/#{query[2]}")
         @result = self.dates(month..month.end_of_month, {:day => day, :week => week})
-      else  
+      else
         date = Chronic.parse(string)
       end
-      @result
+      if @result.size == 1
+        @result.first
+      else
+        @result
+      end
     end
  
     def self.range(dates, specified_options={})
