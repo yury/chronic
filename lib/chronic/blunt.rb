@@ -91,7 +91,8 @@ require 'rubygems'
       @result
     end
 
-    def self.parse(string)
+    def self.parse(input)
+      string = input.dup.downcase.gsub(/\s{1,}/,' ')
       if (string =~ /first|second|third|fourth|last|every/) == 0
         query = string.gsub(/in/){}.downcase.split(/\s+/)
      
@@ -104,16 +105,25 @@ require 'rubygems'
         end
         day = query[1].titleize
         month = Date.parse("#{query[3]}/#{query[2]}")
-        @result = self.dates(month..month.end_of_month, {:day => day, :week => week})
+        dates = self.dates(month..month.end_of_month, {:day => day, :week => week})
+        if dates.size < 2
+          @result = dates.first
+        else
+          @result = date
+        end
+      elsif (string =~ /[0-9]{1,2}\s/) == 0 #&& (string =~ /am|pm|hr|/) > 3
+        @result = Chronic.parse(Date.parse(string).strftime("%D"))
       else
-        date = Chronic.parse(string)
+        @result = Chronic.parse(string)
       end
-      if @result.size == 1
-        @result.first
+      if @result.nil?
+        Chronic.parse(Date.parse(string).strftime("%D"))
       else
         @result
       end
     end
+
+
  
     def self.range(dates, specified_options={})
       default_options = {:csv => false,
@@ -128,7 +138,7 @@ require 'rubygems'
 
       ranges = dates.flatten.map! {|it| get_date it}.group_by_range.map! do |it|
         if options[:time] 
-          Time.parse(it.first.strftime("%Y/%m/%d")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%Y/%m/%d")).advance(:hours => options[:end_hrs])
+          Time.parse(it.first.strftime("%D")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%D")).advance(:hours => options[:end_hrs])
         else
           it.first..it.last
         end
@@ -191,9 +201,9 @@ require 'rubygems'
         when "Date"
           date = it 
         when "Time" 
-          date = Date.parse(it.strftime("%Y/%m/%d"))
+          date = Date.parse(it.strftime("%D"))
         else
-          date = Date.parse(Chronic.parse(it).strftime("%Y/%m/%d"))
+          date = Date.parse(Chronic.parse(it).strftime("%D"))
         end
       end
     end
