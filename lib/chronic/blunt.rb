@@ -15,7 +15,7 @@
 #
 
 require 'rubygems'
-  require 'activesupport'
+require 'activesupport'
 
   class Object
     def tap
@@ -113,7 +113,9 @@ require 'rubygems'
       default_options = {:csv => false,
                          :start_hrs => 0,
                          :end_hrs => 0,
-                         :time => false}
+                         :time => false,
+                         :day => false,
+                         :period => false}
       options = default_options.merge specified_options
       
       specified_options.keys.each do |key|
@@ -137,6 +139,19 @@ require 'rubygems'
       else
         @result = ranges
       end
+
+      if options[:day]
+        dates = Chronic::Blunt.dates(@result, :day => options[:day])
+        ranges =[]
+        dates.each do |it|
+          last_day = it.advance(:days => options[:period])
+          first = it.to_time.advance(:hours => options[:start_hrs])
+          last = last_day.to_time.advance(:hours => options[:end_hrs])
+          ranges << (first..last) if @result.include?(last_day)
+        end
+        @result = ranges
+      end
+      return @result
     end 
   
     private
@@ -185,9 +200,9 @@ require 'rubygems'
         when "Date"
           date = it 
         when "Time" 
-          date = Date.parse(it.strftime("%Y/%m/%d"))
+          date = Date.parse(it.strftime("%D"))
         else
-          date = Date.parse(Chronic.parse(it).strftime("%Y/%m/%d"))
+          date = Date.parse(Chronic.parse(it).strftime("%D"))
         end
       end
     end
