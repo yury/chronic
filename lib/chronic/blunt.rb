@@ -85,7 +85,7 @@ require 'activesupport'
        @result << (first += 1) while first < last
       end
       if options[:day]
-        find_dates(@result,options[:day],options[:hour],options[:week])
+        find_dates(@result,options[:day].to_s,options[:hour],options[:week])
         @result
       end
       @result
