@@ -32,6 +32,11 @@ require 'activesupport'
     end
   end
 
+  class Date
+    def self.parse_dmy(it)
+      Date.parse(it.split(/\D/).delete_if {|i| i.size < 1}.reverse.join('-'))
+    end
+  end
 
   class Chronic::Blunt
 
@@ -181,7 +186,7 @@ require 'activesupport'
  
 
     def self.find_dates(dates,query,hour,week)
-      day = Date::DAYNAMES.rindex(query)
+      day = Date::DAYNAMES.index(query)
         results = []
         dates.each{|d| 
           if hour
