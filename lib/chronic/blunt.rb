@@ -117,12 +117,12 @@ require 'activesupport'
           @result = date
         end
       elsif (string =~ /[0-9]{1,2}\s/) == 0 #&& (string =~ /am|pm|hr|/) > 3
-        @result = Chronic.parse(Date.parse(string).strftime("%D"))
+        @result = Chronic.parse(Date.parse(string).strftime("%Y-%m-%d"))
       else
         @result = Chronic.parse(string)
       end
       if @result.nil?
-        Chronic.parse(Date.parse(string).strftime("%D"))
+        Chronic.parse(Date.parse(string).strftime("%Y-%m-%d"))
       else
         @result
       end
@@ -145,7 +145,7 @@ require 'activesupport'
 
       ranges = dates.flatten.map! {|it| get_date it}.group_by_range.map! do |it|
         if options[:time] 
-          Time.parse(it.first.strftime("%D")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%D")).advance(:hours => options[:end_hrs])
+          Time.parse(it.first.strftime("%Y-%m-%d")).advance(:hours => options[:start_hrs])..Time.parse(it.last.strftime("%Y-%m-%d")).advance(:hours => options[:end_hrs])
         else
           it.first..it.last
         end
@@ -162,15 +162,16 @@ require 'activesupport'
       end
 
       if options[:day]
-        dates = Chronic::Blunt.dates(@result, :day => options[:day])
-        ranges =[]
-        dates.each do |it|
-          last_day = it.advance(:days => options[:period])
+        start_dates = Chronic::Blunt.dates(@result, :day => options[:day])
+        periods =[]
+        start_dates.each do |it|
           first = it.to_time.advance(:hours => options[:start_hrs])
-          last = last_day.to_time.advance(:hours => options[:end_hrs])
-          ranges << (first..last) if @result.include?(last_day)
+          last = it.to_time.advance(:days => options[:period], :hours => options[:end_hrs])
+          available = false
+          ranges.each {|it| available = true if it.include?(first..last)}
+          periods << (first..last) if available
         end
-        @result = ranges
+        @result = periods
       end
       return @result
     end 
@@ -186,7 +187,11 @@ require 'activesupport'
  
 
     def self.find_dates(dates,query,hour,week)
-      day = Date::DAYNAMES.index(query)
+      if query.size == 1
+        day = query.to_i
+      else
+        day = Date::DAYNAMES.index(query)
+      end
         results = []
         dates.each{|d| 
           if hour
@@ -221,9 +226,9 @@ require 'activesupport'
         when "Date"
           date = it 
         when "Time" 
-          date = Date.parse(it.strftime("%D"))
+          date = Date.parse(it.strftime("%Y-%m-%d"))
         else
-          date = Date.parse(Chronic.parse(it).strftime("%D"))
+          date = Date.parse(Chronic.parse(it).strftime("%Y-%m-%d"))
         end
       end
     end
