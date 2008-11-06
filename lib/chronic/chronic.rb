@@ -123,6 +123,8 @@ module Chronic
       normalized_text.gsub!(/\b(ago|before)\b/, 'past')
       normalized_text.gsub!(/\bthis past\b/, 'last')
       normalized_text.gsub!(/\bthis last\b/, 'last')
+      normalized_text.gsub!(/\bhr\b/, 'hour')
+      normalized_text.gsub!(/\bhrs\b/, 'hour')
       normalized_text.gsub!(/\b(?:in|during) the (morning)\b/, '\1')
       normalized_text.gsub!(/\b(?:in the|during the|at) (afternoon|evening|night)\b/, '\1')
       normalized_text.gsub!(/\btonight\b/, 'this night')
