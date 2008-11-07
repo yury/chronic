@@ -1,4 +1,4 @@
-require 'chronic'
+require File.dirname(__FILE__) + '/../lib/chronic'
 require 'test/unit'
 
 class TestChronic < Test::Unit::TestCase
