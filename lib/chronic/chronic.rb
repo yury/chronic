@@ -118,7 +118,6 @@ module Chronic
       normalized_text.gsub!(/\byesterday\b/, 'last day')
       normalized_text.gsub!(/\bnoon\b/, '12:00')
       normalized_text.gsub!(/\bmidnight\b/, '24:00')
-      normalized_text.gsub!(/\bbefore now\b/, 'past')
       normalized_text.gsub!(/\bnow\b/, 'this second')
       normalized_text.gsub!(/\b(ago|before)\b/, 'past')
       normalized_text.gsub!(/\bthis past\b/, 'last')
@@ -131,6 +130,9 @@ module Chronic
       normalized_text.gsub!(/\b\d+:?\d*[ap]\b/,'\0m')
       normalized_text.gsub!(/(\d)([ap]m|oclock)\b/, '\1 \2')
       normalized_text.gsub!(/\b(hence|after|from)\b/, 'future')
+      
+      #not needed - see test_parse_before_now test_parsing.rb ln 726
+      #normalized_text.gsub!(/\bbefore now\b/, 'past')
       normalized_text = numericize_ordinals(normalized_text)
     end
   
@@ -163,9 +165,11 @@ module Chronic
   
   class Token #:nodoc:
     attr_accessor :word, :tags
+    attr_reader :original_word
     
     def initialize(word)
       @word = word
+      @original_word = word
       @tags = []
     end
     
