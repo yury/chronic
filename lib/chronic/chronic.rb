@@ -165,11 +165,9 @@ module Chronic
   
   class Token #:nodoc:
     attr_accessor :word, :tags
-    attr_reader :original_word
     
     def initialize(word)
       @word = word
-      @original_word = word
       @tags = []
     end
     
