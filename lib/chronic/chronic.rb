@@ -110,7 +110,8 @@ module Chronic
     def pre_normalize(text) #:nodoc:
       normalized_text = text.to_s.downcase
       normalized_text = numericize_numbers(normalized_text)
-      normalized_text.gsub!(/['"\.,]/, '')
+      normalized_text.gsub!(/['",]/, '')
+      normalized_text.gsub!(/(\d+\:\d+)\.(\d+)/, '\1\2')
       normalized_text.gsub!(/ \-(\d{4})\b/, ' tzminus\1')
       normalized_text.gsub!(/([\/\-\,\@])/) { ' ' + $1 + ' ' }
       normalized_text.gsub!(/\btoday\b/, 'this day')
@@ -130,7 +131,6 @@ module Chronic
       normalized_text.gsub!(/\b\d+:?\d*[ap]\b/,'\0m')
       normalized_text.gsub!(/(\d)([ap]m|oclock)\b/, '\1 \2')
       normalized_text.gsub!(/\b(hence|after|from)\b/, 'future')
-      
       #not needed - see test_parse_before_now test_parsing.rb ln 726
       #normalized_text.gsub!(/\bbefore now\b/, 'past')
       normalized_text = numericize_ordinals(normalized_text)

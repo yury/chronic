@@ -761,6 +761,14 @@ class TestParsing < Test::Unit::TestCase
     assert_equal Time.local(2006, 8,16,17), t
   end
   
+  def test_fractional_times
+    t = parse_now("in three and a half hours")
+    assert_equal Time.local(2006, 8,16,17, 30), t
+    
+    t = parse_now("in 3.5 hours")
+    assert_equal Time.local(2006, 8,16,17, 30), t
+  end
+  
   private
   def parse_now(string, options={})
     Chronic.parse(string, {:now => TIME_2006_08_16_14_00_00 }.merge(options))
