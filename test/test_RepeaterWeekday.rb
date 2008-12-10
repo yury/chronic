@@ -1,4 +1,4 @@
-require 'lib/chronic'
+require 'chronic'
 require 'test/unit'
 
 class TestRepeaterWeekday < Test::Unit::TestCase
