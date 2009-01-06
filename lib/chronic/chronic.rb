@@ -191,7 +191,7 @@ module Chronic
     
     # Print this Token in a pretty way
     def to_s
-      @word << '(' << @tags.join(', ') << ') '
+      "#{@word}(#{@tags.join(', ')})"
     end
   end
   
