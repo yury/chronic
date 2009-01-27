@@ -129,6 +129,23 @@ module Chronic
       normalized_text.gsub!(/\b\d+:?\d*[ap]\b/,'\0m')
       normalized_text.gsub!(/(\d)([ap]m|oclock)\b/, '\1 \2')
       normalized_text.gsub!(/\b(hence|after|from)\b/, 'future')
+      
+      normalized_text.gsub!(/\bсегодня\b/, 'this day')
+      normalized_text.gsub!(/\bзавтра\b/, 'next day')
+      normalized_text.gsub!(/\bвчера\b/, 'last day')
+      normalized_text.gsub!(/\bвечер(?:ом|а)\b/, '12:00')
+      normalized_text.gsub!(/\b(день|дня|днём|днем)\b/, '24:00')
+      normalized_text.gsub!(/\b(до|перед|назад|предыдущ(ие|ая|ий)|прошл(ая|ые|ое|ый))\b/, 'past')
+      normalized_text.gsub!(/\bсейчас\b/, 'this second')
+      #normalized_text.gsub!(/\b(ago|before)\b/, 'past')
+      normalized_text.gsub!(/\bthis past\b/, 'last')
+      normalized_text.gsub!(/\bthis last\b/, 'last')
+      normalized_text.gsub!(/\b(утро(?:м))\b/, '\1')
+      normalized_text.gsub!(/\b(вечер(?:ом)|(днем|днем|день)|ночь(?:ю))\b/, '\1')
+      normalized_text.gsub!(/\b(ночью|вечером)\b/, 'this night')
+      normalized_text.gsub!(/(?=\w)([ap]m|oclock)\b/, ' \1')
+      normalized_text.gsub!(/\b(hence|after|from)\b/, 'future')
+      
       normalized_text = numericize_ordinals(normalized_text)
     end
   

@@ -81,17 +81,29 @@ class Chronic::Repeater < Chronic::Tag #:nodoc:
   end
   
   def self.scan_for_units(token)
-    scanner = {/^years?$/ => :year,
-               /^seasons?$/ => :season,
-               /^months?$/ => :month,
-               /^fortnights?$/ => :fortnight,
-               /^weeks?$/ => :week,
-               /^weekends?$/ => :weekend,
-               /^(week|business)days?$/ => :weekday,
-               /^days?$/ => :day,
-               /^hours?$/ => :hour,
-               /^minutes?$/ => :minute,
-               /^seconds?$/ => :second}
+    scanner = {
+      /^years?$/ => :year,
+      /^seasons?$/ => :season,
+      /^months?$/ => :month,
+      /^fortnights?$/ => :fortnight,
+      /^weeks?$/ => :week,
+      /^weekends?$/ => :weekend,
+      /^(week|business)days?$/ => :weekday,
+      /^days?$/ => :day,
+      /^hours?$/ => :hour,
+      /^minutes?$/ => :minute,
+      /^seconds?$/ => :second,
+      /^(лет|год|года)?$/ => :year,
+      /^сезон(?:ов|a)?$/ => :season,
+      /^месяц(?:ев)?$/ => :month,
+      /^fortnights?$/ => :fortnight,
+      /^недел(?:я|и|ь)?$/ => :week,
+      /^выходн(?:ой|ых|ова)?$/ => :weekend,
+      /^дн(?:я|ей)?$/ => :day,
+      /^час(?:ов|а)?$/ => :hour,
+      /^минут(?:ы|а)?$/ => :minute,
+      /^секунд(?:ы|а)?$/ => :second
+      }
     scanner.keys.each do |scanner_item|
       if scanner_item =~ token.word
         klass_name = 'Chronic::Repeater' + scanner[scanner_item].to_s.capitalize
