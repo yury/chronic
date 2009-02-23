@@ -61,5 +61,7 @@ class TestRepeaterHour < Test::Unit::TestCase
     assert_equal Time.local(2006, 8, 15, 14), offset_span.begin
     assert_equal Time.local(2006, 8, 15, 14, 0, 1), offset_span.end
   end
-  
+  def test_sanity
+    assert_not_nil Chronic.parse '2 hours'
+  end 
 end
