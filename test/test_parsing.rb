@@ -275,10 +275,10 @@ class TestParsing < Test::Unit::TestCase
     # year
     
     time = parse_now("this year")
-    assert_equal Time.local(2006, 10, 24, 12, 30), time
+    assert_equal Time.local(2006, 10, 24, 12), time
     
     time = parse_now("this year", :context => :past)
-    assert_equal Time.local(2006, 4, 24, 12, 30), time
+    assert_equal Time.local(2006, 4, 24, 13), time
     
     # month
     
@@ -580,7 +580,7 @@ class TestParsing < Test::Unit::TestCase
   
   def test_parse_guess_o_r_g_r
     time = parse_now("3rd month next year")
-    assert_equal Time.local(2007, 3, 16, 12, 30), time
+    assert_equal Time.local(2007, 3, 16, 13), time
     
     time = parse_now("3rd thursday this september")
     assert_equal Time.local(2006, 9, 21, 12), time

@@ -152,7 +152,13 @@ module Chronic
     def guess(span) #:nodoc:
       return nil if span.nil?
       if span.width > 1
-        span.begin + (span.width / 2)
+        
+        # Account for a timezone difference between the start and end of the range.
+        # This most likely will happen when dealing with a Daylight Saving Time start
+        # or end day.
+        gmt_offset_diff = span.begin.gmt_offset - span.end.gmt_offset
+        
+        span.begin + ((span.width - gmt_offset_diff) / 2)
       else
         span.begin
       end
