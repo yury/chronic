@@ -22,10 +22,13 @@ module Chronic
     #     of that time instead of Time.now. If set to nil, Chronic will use Time.now.
     #
     # [<tt>:guess</tt>]
-    #     +true+ or +false+ (defaults to +true+)
+    #     +true+, +false+, +"start"+, +"middle"+, and +"end"+ (defaults to +true+)
     #
     #     By default, the parser will guess a single point in time for the
-    #     given date or time. If you'd rather have the entire time span returned,
+    #     given date or time.  +:guess+ => +true+ or +"middle"+ will return the middle 
+		#     value of the range.  If +"start"+ is specified, Chronic::Span will return the
+		#     beginning of the range.  If +"end"+ is specified, the last value in 
+		#     Chronic::Span will be returned. If you'd rather have the entire time span returned,
     #     set <tt>:guess</tt> to +false+ and a Chronic::Span will be returned.
     #     
     # [<tt>:ambiguous_time_range</tt>]
