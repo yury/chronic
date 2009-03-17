@@ -42,7 +42,7 @@ require 'chronic/time_zone'
 require 'numerizer/numerizer'
 
 module Chronic
-  VERSION = "0.2.3"
+  VERSION = "0.3.0"
   
   class << self
     attr_accessor :debug
@@ -51,13 +51,6 @@ module Chronic
 
   self.debug = false
   self.time_class = Time
-end
-
-alias p_orig p
-
-def p(val)
-  p_orig val
-  puts
 end
 
 # class Time
