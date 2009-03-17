@@ -45,6 +45,7 @@ module Chronic
       default_options = {:context => :future,
                          :now => Chronic.time_class.now,
                          :guess => true,
+												 :guess_how => :middle,
                          :ambiguous_time_range => 6,
                          :endian_precedence => nil}
       options = default_options.merge specified_options
@@ -59,6 +60,7 @@ module Chronic
         default_options.keys.include?(key) || raise(InvalidArgumentException, "#{key} is not a valid option key.")
       end
       [:past, :future, :none].include?(options[:context]) || raise(InvalidArgumentException, "Invalid value ':#{options[:context]}' for :context specified. Valid values are :past and :future.")
+			["start", "middle", "end", true, false].include?(options[:guess]) || validate_percentness_of(options[:guess]) || raise(InvalidArgumentException, "Invalid value ':#{options[:guess]}' for :guess how specified. Valid values are true, false, \"start\", \"middle\", and \"end\".  true will default to \"middle\". :guess can also be a percent(0.60)")
       
       # store now for later =)
       @now = options[:now]
@@ -97,7 +99,7 @@ module Chronic
       
       # guess a time within a span if required
       if options[:guess]
-        return self.guess(span)
+        return self.guess(span, options[:guess])
       else
         return span
       end
@@ -148,14 +150,28 @@ module Chronic
     end
     
     # Guess a specific time within the given span
-    def guess(span) #:nodoc:
+    def guess(span, guess) #:nodoc:
       return nil if span.nil?
       if span.width > 1
-        span.begin + (span.width / 2)
+				case guess
+				when "start"   
+					span.begin 
+				when true, "middle"
+					span.begin + (span.width / 2)
+				when "end"  
+					span.begin + span.width
+				else 
+					span.begin + (span.width * guess) 
+				end
       else
         span.begin
       end
     end
+
+		# Validates numericality of something
+		def validate_percentness_of(number) #:nodoc:
+			number.to_s.to_f == number && number >= 0 && number <= 1  
+		end
   end
   
   class Token #:nodoc:
