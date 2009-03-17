@@ -21,4 +21,13 @@ class TestSpan < Test::Unit::TestCase
     assert_equal 1, (s - 1).end
   end
   
+  def test_span_exclusive
+    s = Chronic::Span.new(1, 4)
+    assert s.include?(3)
+    assert !s.include?(4)
+    t = Chronic::Span.new(Time.local(1980, 03, 01, 0), Time.local(1980, 04, 01, 0))
+    assert t.include?(Time.local(1980, 03, 31, 0))
+    assert !t.include?(Time.local(1980, 04, 01, 0))
+  end
+  
 end
