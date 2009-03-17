@@ -1,6 +1,6 @@
 SPEC = Gem::Specification.new do |s|
   s.name = 'chronic'
-  s.version = '0.3.0'
+  s.version = '0.3.0.1'
   s.author = 'Tom Preston-Werner'
   s.email = 'tom@rubyisawesome.com'
   s.homepage = 'http://chronic.rubyforge.org'
