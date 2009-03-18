@@ -8,6 +8,7 @@ class Chronic::Repeater < Chronic::Tag #:nodoc:
       if t = self.scan_for_day_portions(tokens[i]) then tokens[i].tag(t); next end
       if t = self.scan_for_times(tokens[i], options) then tokens[i].tag(t); next end
       if t = self.scan_for_units(tokens[i]) then tokens[i].tag(t); next end
+      if t = self.scan_for_decades(tokens[i]) then tokens[i].tag(t); next end
     end
     tokens
   end
@@ -76,6 +77,13 @@ class Chronic::Repeater < Chronic::Tag #:nodoc:
   def self.scan_for_times(token, options)
     if token.word =~ /^\d{1,2}(:?\d{2})?([\.:]?\d{2})?$/
       return Chronic::RepeaterTime.new(token.word, options)
+    end
+    return nil
+  end
+  
+  def self.scan_for_decades(token)
+    if token.word =~ Chronic::RepeaterDecade::DECADE_PATTERN
+      return Chronic::RepeaterDecade.new(token.word)
     end
     return nil
   end
