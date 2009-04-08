@@ -43,7 +43,7 @@ class MiniDate
     return false
   end
   
-  def equals?(other)
+  def ==(other)
     @month == other.month and day == other.day
   end
 end
@@ -133,7 +133,7 @@ class Chronic::RepeaterSeason < Chronic::Repeater #:nodoc:
     start = Time.construct(@now.year, @now.month, @now.day)
     seconds = 0
     
-    until (start + direction * seconds).to_minidate.equals?(goal)
+    until (start + direction * seconds).to_minidate == goal
       seconds += Chronic::RepeaterDay::DAY_SECONDS
     end
 
