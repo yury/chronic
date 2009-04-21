@@ -102,6 +102,50 @@ module Chronic
         return span
       end
     end
+
+    def strip_tokens(text, specified_options = {})
+      @text = text
+      
+      # get options and set defaults if necessary
+      default_options = {:context => :future,
+                         :now => Chronic.time_class.now,
+                         :guess => true,
+                         :ambiguous_time_range => 6,
+                         :endian_precedence => nil}
+      options = default_options.merge specified_options
+      
+      # handle options that were set to nil
+      options[:context] = :future unless options[:context]
+      options[:now] = Chronic.time_class.now unless options[:context]
+      options[:ambiguous_time_range] = 6 unless options[:ambiguous_time_range]
+            
+      # ensure the specified options are valid
+      specified_options.keys.each do |key|
+        default_options.keys.include?(key) || raise(InvalidArgumentException, "#{key} is not a valid option key.")
+      end
+      [:past, :future, :none].include?(options[:context]) || raise(InvalidArgumentException, "Invalid value ':#{options[:context]}' for :context specified. Valid values are :past and :future.")
+      
+      # store now for later =)
+      @now = options[:now]
+      
+      # put the text into a normal format to ease scanning
+      text = self.pre_normalize(text)
+          
+      # get base tokens for each word
+      @tokens = self.base_tokenize(text)
+    
+      # scan the tokens with each token scanner
+      [Repeater].each do |tokenizer|
+        @tokens = tokenizer.scan(@tokens, options)
+      end
+      
+      [Grabber, Pointer, Scalar, Ordinal, Separator, TimeZone].each do |tokenizer|
+        @tokens = tokenizer.scan(@tokens)
+      end
+      
+      # strip any tagged tokens
+      return @tokens.select { |token| !token.tagged? }.map { |token| token.word }.join(' ')
+    end
     
     # Clean up the specified input text by stripping unwanted characters,
     # converting idioms to their canonical form, converting number words

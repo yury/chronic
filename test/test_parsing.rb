@@ -636,6 +636,12 @@ class TestParsing < Test::Unit::TestCase
     assert_equal parse_now("futuristically speaking today at 2pm"), @time_2006_08_16_14_00_00
     assert_equal parse_now("meeting today at 2pm"), @time_2006_08_16_14_00_00
   end
+
+  def test_parse_strip_tokens
+    assert_equal Chronic.strip_tokens("eat pasty buns today at 2pm"), "eat pasty buns"
+    assert_equal Chronic.strip_tokens("futuristically speaking today at 2pm"), "futuristically speaking"
+    assert_equal Chronic.strip_tokens("meeting today at 2pm"), "meeting"
+  end
   
   def test_am_pm
     assert_equal Time.local(2006, 8, 16), parse_now("8/16/2006 at 12am")
