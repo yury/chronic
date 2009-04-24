@@ -91,7 +91,18 @@ class Chronic::Repeater < Chronic::Tag #:nodoc:
                /^days?$/i => :day,
                /^hours?$/i => :hour,
                /^minutes?$/i => :minute,
-               /^seconds?$/i => :second}
+               /^seconds?$/i => :second,
+      /^(лет|год|года)?$/i => :year,
+      /^сезон(?:ов|a)?$/i => :season,
+      /^месяц(?:ев)?$/i => :month,
+      /^fortnights?$/i => :fortnight,
+      /^недел(?:я|и|ь)?$/i => :week,
+      /^выходн(?:ой|ых|ова)?$/i => :weekend,
+      /^дн(?:я|ей)?$/i => :day,
+      /^час(?:ов|а)?$/i => :hour,
+      /^минут(?:ы|а)?$/i => :minute,
+      /^секунд(?:ы|а)?$/i => :second
+      }
     scanner.keys.each do |scanner_item|
       if scanner_item =~ token.word
         klass_name = 'Chronic::Repeater' + scanner[scanner_item].to_s.capitalize

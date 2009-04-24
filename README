@@ -4,6 +4,8 @@ Chronic
 
 == DESCRIPTION:
 
+Adding some support for Russian.
+
 Chronic is a natural language date/time parser written in pure Ruby. See below for the wide variety of formats Chronic will parse.
 
 == INSTALLATION:
