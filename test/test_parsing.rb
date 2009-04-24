@@ -709,6 +709,11 @@ class TestParsing < Test::Unit::TestCase
     # t1 = Chronic.parse('1st monday in november', :now => Time.local(2007))
     # assert_equal Time.local(2007, 11, 5, 11), t1
   end
+
+  def test_parse_strip_tokens_preserved_case
+    assert_equal Chronic.strip_tokens("Ham Sandwich"), "Ham Sandwich"
+    assert_equal Chronic.strip_tokens("Eat a Ham Sandwich for lunch tomorrow"), "Eat a Ham Sandwich for lunch"
+  end
   
   private
   def parse_now(string, options={})
