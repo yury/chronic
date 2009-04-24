@@ -184,14 +184,9 @@ module Chronic
       normalized_text.gsub!(/\b(день|дня|днём|днем)\b/i, '24:00')
       normalized_text.gsub!(/\b(до|перед|назад|предыдущ(ие|ая|ий)|прошл(ая|ые|ое|ый))\b/i, 'past')
       normalized_text.gsub!(/\bсейчас\b/i, 'this second')
-      #normalized_text.gsub!(/\b(ago|before)\b/, 'past')
-      normalized_text.gsub!(/\bthis past\b/i, 'last')
-      normalized_text.gsub!(/\bthis last\b/i, 'last')
       normalized_text.gsub!(/\b(утро(?:м))\b/i, '\1')
       normalized_text.gsub!(/\b(вечер(?:ом)|(днем|днем|день)|ночь(?:ю))\b/i, '\1')
       normalized_text.gsub!(/\b(ночью|вечером)\b/i, 'this night')
-      normalized_text.gsub!(/(?=\w)([ap]m|oclock)\b/i, ' \1')
-      normalized_text.gsub!(/\b(hence|after|from)\b/i, 'future')
       
       normalized_text = numericize_ordinals(normalized_text)
     end
