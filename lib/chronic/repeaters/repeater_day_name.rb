@@ -1,10 +1,10 @@
 require 'date'
 class Chronic::RepeaterDayName < Chronic::Repeater #:nodoc:
   DAY_SECONDS = 86400 # (24 * 60 * 60)
-  
+ 
   def initialize(type)
     super
-    @current_day_start = nil
+    @current_date = nil
   end
 
   def next(pointer)
@@ -12,7 +12,7 @@ class Chronic::RepeaterDayName < Chronic::Repeater #:nodoc:
   
     direction = pointer == :future ? 1 : -1
   
-    if !@current_date
+    unless @current_date
       @current_date = DateTime.new(y=@now.year, m=@now.month, d=@now.day)
       @current_date += direction 
       day_num = symbol_to_number(@type)
