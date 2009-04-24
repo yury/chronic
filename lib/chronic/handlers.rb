@@ -40,6 +40,7 @@ module Chronic
        # tonight at 7pm
        :anchor => [Handler.new([:grabber?, :repeater, :separator_at?, :repeater?, :repeater?], :handle_r),
                    Handler.new([:grabber?, :repeater, :repeater, :separator_at?, :repeater?, :repeater?], :handle_r),
+                   Handler.new([:repeater, :repeater, :grabber, :repeater], :handle_r_r_g_r),
                    Handler.new([:repeater, :grabber, :repeater], :handle_r_g_r)],
                    
        # 3 weeks from now, in 2 months
@@ -288,8 +289,11 @@ module Chronic
     end
     
     def handle_r_g_r(tokens, options) #:nodoc:
-      new_tokens = [tokens[1], tokens[0], tokens[2]]
-      self.handle_r(new_tokens, options)
+      self.handle_r(tokens.values_at(1,0,2), options)
+    end
+    
+    def handle_r_r_g_r(tokens, options) #:nodoc:
+      self.handle_r(tokens.values_at(2,3,0,1), options)      
     end
     
     # arrows

@@ -466,6 +466,11 @@ class TestParsing < Test::Unit::TestCase
     
     time = parse_now("tuesday last week")
     assert_equal Time.local(2006, 8, 8, 12), time
+  end  
+  
+  def test_parse_guess_rrgr
+    time = parse_now("5pm tomorrow")
+    assert_equal Time.local(2006, 8, 17, 17), time
   end
   
   def test_parse_guess_s_r_p
