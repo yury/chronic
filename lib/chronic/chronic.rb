@@ -64,10 +64,13 @@ module Chronic
       @now = options[:now]
       
       # put the text into a normal format to ease scanning
+      puts "+++ text = #{text}" if Chronic.debug
       text = self.pre_normalize(text)
+      puts "--- text = #{text}" if Chronic.debug
           
       # get base tokens for each word
       @tokens = self.base_tokenize(text)
+      puts @tokens if Chronic.debug
     
       # scan the tokens with each token scanner
       [Repeater].each do |tokenizer|

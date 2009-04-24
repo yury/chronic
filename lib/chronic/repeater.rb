@@ -61,6 +61,7 @@ class Chronic::Repeater < Chronic::Tag #:nodoc:
   end
   
   def self.scan_for_day_portions(token)
+	  puts "scan_for_day_portions -- #{token}" if Chronic.debug
     scanner = {/^ams?$/i => :am,
                /^pms?$/i => :pm,
                /^mornings?$/i => :morning,
