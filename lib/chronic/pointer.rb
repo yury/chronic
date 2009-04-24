@@ -12,7 +12,9 @@ module Chronic
     def self.scan_for_all(token)
       scanner = {/\bpast\b/i => :past,
                  /\bfuture\b/i => :future,
+                 /\bfor\b/i => :future,
                  /\bin\b/i => :future}
+
       scanner.keys.each do |scanner_item|
         return self.new(scanner[scanner_item]) if scanner_item =~ token.word
       end

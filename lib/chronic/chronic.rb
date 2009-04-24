@@ -157,7 +157,8 @@ module Chronic
     def pre_normalize(text) #:nodoc:
       normalized_text = text.to_s
       normalized_text = numericize_numbers(normalized_text)
-      normalized_text.gsub!(/['"\.,]/, '')
+      normalized_text.gsub!(/['",]/, '')
+      normalized_text.gsub!(/(\d+\:\d+)\.(\d+)/, '\1\2')
       normalized_text.gsub!(/ \-(\d{4})\b/, ' tzminus\1')
       normalized_text.gsub!(/([\/\-\,\@])/) { ' ' + $1 + ' ' }
       normalized_text.gsub!(/\btoday\b/i, 'this day')
@@ -176,6 +177,8 @@ module Chronic
       normalized_text.gsub!(/\b\d+:?\d*[ap]\b/i,'\0m')
       normalized_text.gsub!(/(\d)([ap]m|oclock)\b/i, '\1 \2')
       normalized_text.gsub!(/\b(hence|after|from)\b/i, 'future')
+      #not needed - see test_parse_before_now (test_parsing.rb +726)
+      #normalized_text.gsub!(/\bbefore now\b/, 'past')
 
       normalized_text.gsub!(/\bсегодня\b/i, 'this day')
       normalized_text.gsub!(/\bзавтра\b/i, 'next day')
@@ -256,7 +259,7 @@ module Chronic
     
     # Print this Token in a pretty way
     def to_s
-      @word << '(' << @tags.join(', ') << ') '
+      "#{@word}(#{@tags.join(', ')})"
     end
   end
   

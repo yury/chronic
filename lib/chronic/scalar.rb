@@ -13,9 +13,9 @@ module Chronic
     end
   
     def self.scan_for_scalars(token, post_token)
-      if token.word =~ /^\d*$/
+      if token.word =~ /^\d*$/ || token.word =~ /^\d\.\d*$/
         unless post_token && %w{am pm morning afternoon evening night}.include?(post_token)
-          return Scalar.new(token.word.to_i)
+          return Scalar.new(token.word.to_f)
         end
       end
       return nil

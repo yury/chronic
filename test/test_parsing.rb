@@ -725,6 +725,71 @@ class TestParsing < Test::Unit::TestCase
     assert_equal Chronic.strip_tokens("Eat a Ham Sandwich for lunch tomorrow"), "Eat a Ham Sandwich for lunch"
   end
   
+  def test_parse_this_past
+    t = parse_now("this past tuesday")
+    assert_equal Time.local(2006,8,15, 12), t
+    
+    t = parse_now("this past day")
+    assert_equal Time.local(2006,8,15, 12), t
+    
+    t = parse_now("this past hour")
+    assert_equal Time.local(2006,8,16, 13, 30), t
+  end
+  
+  def test_parse_noon
+    t = parse_now("noon")
+    assert_equal Time.local(2006,8,16, 12), t
+    
+    t = parse_now("tomorrow at noon")
+    assert_equal Time.local(2006,8,17, 12), t
+  end
+  
+  def test_parse_before_now
+    t = parse_now("3 hours before now")
+    assert_equal Time.local(2006,8,16, 11), t
+    
+    t = parse_now("3 days before now")
+    assert_equal Time.local(2006,8,13, 14), t
+    
+    t = parse_now("30 minutes before now")
+    assert_equal Time.local(2006,8,16, 13,30), t
+  end
+  
+  def test_now
+    t = parse_now("now")
+    assert_equal Time.local(2006,8,16,14), t
+    
+    t = parse_now("1 hour from now")
+    assert_equal Time.local(2006,8,16,15), t
+    
+    t = parse_now("1 hour before now")
+    assert_equal Time.local(2006,8,16,13), t
+  end
+  
+  def test_this_last
+    t = parse_now("this last day")
+    assert_equal Time.local(2006, 8, 15, 12), t
+    
+    t = parse_now("this last hour")
+    assert_equal Time.local(2006, 8, 16, 13, 30), t
+  end
+  
+  def test_hr_and_hrs
+    t = parse_now("in 3 hr")
+    assert_equal Time.local(2006, 8,16,17), t
+    
+    t = parse_now("in 3 hrs")
+    assert_equal Time.local(2006, 8,16,17), t
+  end
+  
+  def test_fractional_times
+    t = parse_now("in three and a half hours")
+    assert_equal Time.local(2006, 8,16,17, 30), t
+    
+    t = parse_now("in 3.5 hours")
+    assert_equal Time.local(2006, 8,16,17, 30), t
+  end
+  
   private
   def parse_now(string, options={})
     Chronic.parse(string, {:now => TIME_2006_08_16_14_00_00 }.merge(options))
