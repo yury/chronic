@@ -722,7 +722,7 @@ class TestParsing < Test::Unit::TestCase
 
   def test_parse_strip_tokens_preserved_case
     assert_equal Chronic.strip_tokens("Ham Sandwich"), "Ham Sandwich"
-    assert_equal Chronic.strip_tokens("Eat a Ham Sandwich for lunch tomorrow"), "Eat a Ham Sandwich for lunch"
+    assert_equal Chronic.strip_tokens("Eat a Ham Sandwich tomorrow"), "Eat a Ham Sandwich"
   end
   
   def test_parse_this_past
