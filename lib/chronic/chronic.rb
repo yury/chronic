@@ -284,7 +284,13 @@ module Chronic
   # A Span represents a range of time. Since this class extends
   # Range, you can use #begin and #end to get the beginning and
   # ending times of the span (they will be of class Time)
-  class Span < Range   
+  class Span < Range
+    
+    def initialize(range_begin, range_end)
+      # Use exclusive range.
+      super(range_begin, range_end, true)
+    end
+    
     # Returns the width of this span in seconds   
     def width
       (self.end - self.begin).to_i
@@ -304,7 +310,7 @@ module Chronic
     
     # Prints this span in a nice fashion
     def to_s
-      '(' << self.begin.to_s << '..' << self.end.to_s << ')'
+      '(' << self.begin.to_s << '...' << self.end.to_s << ')'
     end
   end
 
