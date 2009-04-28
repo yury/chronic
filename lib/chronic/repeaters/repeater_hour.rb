@@ -44,7 +44,8 @@ class Chronic::RepeaterHour < Chronic::Repeater #:nodoc:
   
   def offset(span, amount, pointer)
     direction = pointer == :future ? 1 : -1
-    (span || 0) + direction * amount * HOUR_SECONDS
+    p [span, amount, pointer] if Chronic.debug
+    span + direction * amount * HOUR_SECONDS
   end
   
   def width
