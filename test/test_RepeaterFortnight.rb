@@ -54,10 +54,10 @@ class TestRepeaterFortnight < Test::Unit::TestCase
   def test_offset
     span = Chronic::Span.new(@now, @now + 1)
     
-    offset_span = Chronic::RepeaterWeek.new(:week).offset(span, 3, :future)
+    offset_span = Chronic::RepeaterFortnight.new(:week).offset(span, 3, :future)
     
-    assert_equal Time.local(2006, 9, 6, 14), offset_span.begin
-    assert_equal Time.local(2006, 9, 6, 14, 0, 1), offset_span.end
+    assert_equal Time.local(2006, 9, 27, 14), offset_span.begin
+    assert_equal Time.local(2006, 9, 27, 14, 0, 1), offset_span.end
   end
   
 end
