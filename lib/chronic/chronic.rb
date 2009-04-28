@@ -22,10 +22,13 @@ module Chronic
     #     of that time instead of Time.now. If set to nil, Chronic will use Time.now.
     #
     # [<tt>:guess</tt>]
-    #     +true+ or +false+ (defaults to +true+)
+    #     +true+, +false+, +"start"+, +"middle"+, and +"end"+ (defaults to +true+)
     #
     #     By default, the parser will guess a single point in time for the
-    #     given date or time. If you'd rather have the entire time span returned,
+    #     given date or time.  +:guess+ => +true+ or +"middle"+ will return the middle 
+		#     value of the range.  If +"start"+ is specified, Chronic::Span will return the
+		#     beginning of the range.  If +"end"+ is specified, the last value in 
+		#     Chronic::Span will be returned. If you'd rather have the entire time span returned,
     #     set <tt>:guess</tt> to +false+ and a Chronic::Span will be returned.
     #     
     # [<tt>:ambiguous_time_range</tt>]
@@ -45,6 +48,7 @@ module Chronic
       default_options = {:context => :future,
                          :now => Chronic.time_class.now,
                          :guess => true,
+												 :guess_how => :middle,
                          :ambiguous_time_range => 6,
                          :endian_precedence => nil}
       options = default_options.merge specified_options
@@ -59,6 +63,7 @@ module Chronic
         default_options.keys.include?(key) || raise(InvalidArgumentException, "#{key} is not a valid option key.")
       end
       [:past, :future, :none].include?(options[:context]) || raise(InvalidArgumentException, "Invalid value ':#{options[:context]}' for :context specified. Valid values are :past and :future.")
+			["start", "middle", "end", true, false].include?(options[:guess]) || validate_percentness_of(options[:guess]) || raise(InvalidArgumentException, "Invalid value ':#{options[:guess]}' for :guess how specified. Valid values are true, false, \"start\", \"middle\", and \"end\".  true will default to \"middle\". :guess can also be a percent(0.60)")
       
       # store now for later =)
       @now = options[:now]
@@ -100,7 +105,7 @@ module Chronic
       
       # guess a time within a span if required
       if options[:guess]
-        return self.guess(span)
+        return self.guess(span, options[:guess])
       else
         return span
       end
@@ -211,20 +216,32 @@ module Chronic
     end
     
     # Guess a specific time within the given span
-    def guess(span) #:nodoc:
+    def guess(span, guess=true) #:nodoc:
       return nil if span.nil?
       if span.width > 1
-        
         # Account for a timezone difference between the start and end of the range.
         # This most likely will happen when dealing with a Daylight Saving Time start
         # or end day.
         gmt_offset_diff = span.begin.gmt_offset - span.end.gmt_offset
-        
-        span.begin + ((span.width - gmt_offset_diff) / 2)
+				case guess
+				when "start"   
+					span.begin 
+				when true, "middle"
+					span.begin + ((span.width - gmt_offset_diff) / 2)
+				when "end"  
+					span.begin + (span.width - gmt_offset_diff)
+				else 
+					span.begin + ((span.width - gmt_offset_diff) * guess) 
+				end
       else
         span.begin
       end
     end
+
+		# Validates numericality of something
+		def validate_percentness_of(number) #:nodoc:
+			number.to_s.to_f == number && number >= 0 && number <= 1  
+		end
   end
   
   class Token #:nodoc:
