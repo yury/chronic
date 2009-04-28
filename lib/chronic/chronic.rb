@@ -182,6 +182,7 @@ module Chronic
       normalized_text.gsub!(/\b\d+:?\d*[ap]\b/i,'\0m')
       normalized_text.gsub!(/(\d)([ap]m|oclock)\b/i, '\1 \2')
       normalized_text.gsub!(/\b(hence|after|from)\b/i, 'future')
+      normalized_text.gsub!(/\bhrs?\b/i, 'hour')
       #not needed - see test_parse_before_now (test_parsing.rb +726)
       #normalized_text.gsub!(/\bbefore now\b/, 'past')
 
