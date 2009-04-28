@@ -63,5 +63,6 @@ class TestRepeaterHour < Test::Unit::TestCase
   end
   def test_sanity
     assert_not_nil Chronic.parse '2 hours ago'
+#   assert_not_nil Chronic.parse '2 hours' # FIXME: this fails
   end 
 end
