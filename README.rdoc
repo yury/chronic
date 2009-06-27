@@ -1,6 +1,7 @@
-Chronic
+= Chronic
 
 http://chronic.rubyforge.org/
+
 by Tom Preston-Werner
 
 = WARNING:
