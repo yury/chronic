@@ -45,13 +45,13 @@ require 'chronic/blunt.rb'
 require 'numerizer/numerizer'
 
 module Chronic
-  VERSION = "0.3.0.2"
-  
-  class << self
-    attr_accessor :debug
-    attr_accessor :time_class
-  end
+	VERSION = "0.3.0.2"
 
-  self.debug = false
-  self.time_class = Time
+	class << self
+		attr_accessor :debug
+		attr_accessor :time_class
+	end
+
+	self.debug = false
+	self.time_class = Time
 end
