@@ -6,7 +6,7 @@ require 'spec/rake/spectask'
 
 require './lib/chronic.rb'
 
-Hoe.new('chronic', Chronic::VERSION) do |p|
+Hoe.spec 'chronic' do |p|
   p.rubyforge_name = 'chronic'
   p.summary = 'A natural language date parser'
   p.author = 'Tom Preston-Werner'
@@ -16,6 +16,8 @@ Hoe.new('chronic', Chronic::VERSION) do |p|
   p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   p.need_tar = false
   p.extra_deps = []
+  p.version = Chronic::VERSION
+  p.readme_file = "README.rdoc"
 end
 
 desc "Run all specs"
@@ -32,4 +34,4 @@ Spec::Rake::SpecTask.new('coverage') do |t|
   t.rcov = true
 end
 
-# vim: syntax=Ruby
+# vim: syntax=ruby
