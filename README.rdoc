@@ -33,11 +33,11 @@ Chronic can be installed via RubyGems:
 
 Browse the code and get an RSS feed of the commit log at:
 
-  http://github.com/mojombo/chronic.git
+  http://github.com/evaryont/chronic.git
 
 You can grab the code (and help with development) via git:
 
-  $ git clone git://github.com/mojombo/chronic.git
+  $ git clone git://github.com/evaryont/chronic.git
 
 == USAGE:
 
