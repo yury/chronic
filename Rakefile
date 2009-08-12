@@ -6,18 +6,22 @@ require 'spec/rake/spectask'
 
 require './lib/chronic.rb'
 
-Hoe.spec 'chronic' do |p|
-	p.rubyforge_name = 'chronic'
-	p.summary = 'A natural language date parser'
-	p.author = 'Tom Preston-Werner'
-	p.email = 'tom@rubyisawesome.com'
-	p.description = p.paragraphs_of('README.rdoc', 2).join("\n\n")
-	p.url = p.paragraphs_of('README.rdoc', 0).first.split(/\n/)[1..-1]
-	p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
-	p.need_tar = false
-	p.extra_deps = []
-	p.version = Chronic::VERSION
-	p.readme_file = "README.rdoc"
+Hoe.spec 'chronic' do
+	readme_file = File.expand_path(File.join('.', "README.rdoc"))
+
+	rubyforge_name = 'chronic'
+	summary = 'A natural language date parser'
+
+	developer('Tom Preston-Werner','tom@rubyisawesome.com')
+	developer('Colin Shea','colin@evaryont.me')
+
+	description = paragraphs_of(readme_file, 2).join("\n\n")
+	url = paragraphs_of(readme_file, 0).first.split(/\n/)[1..-1]
+	changes = paragraphs_of('History.txt', 0..1).join("\n\n")
+
+	need_tar = false
+	extra_deps = []
+	version = Chronic::VERSION
 end
 
 desc "Run all specs"
