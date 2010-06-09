@@ -520,6 +520,9 @@ class TestParsing < Test::Unit::TestCase
 		time = parse_now("6 months hence")
 		assert_equal Time.local(2007, 2, 16, 14), time
 
+		time = parse_now("2 weeks later")
+		assert_equal Time.local(2006, 8, 30, 14), time
+
 		time = parse_now("3 fortnights hence")
 		assert_equal Time.local(2006, 9, 27, 14), time
 
