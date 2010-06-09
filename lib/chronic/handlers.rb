@@ -28,6 +28,7 @@ module Chronic
 						Handler.new([:repeater_month_name, :scalar_day, :separator_at?, 'time?'], :handle_rmn_sd),
 						Handler.new([:repeater_month_name, :ordinal_day, :scalar_year], :handle_rmn_od_sy),
 						Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :repeater_month_name, :scalar_day], :handle_rmn_sd_on),
+                                                Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :scalar_day, :repeater_month_name], :handle_sd_rmn_on),
 						Handler.new([:repeater_month_name, :ordinal_day, :separator_at?, 'time?'], :handle_rmn_od),
 						Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :repeater_month_name, :ordinal_day], :handle_rmn_od_on),
 						Handler.new([:repeater_month_name, :scalar_year], :handle_rmn_sy),
@@ -153,6 +154,14 @@ module Chronic
 		def handle_rmn_sd(tokens, options) #:nodoc:
 			handle_m_d(tokens[0].get_tag(RepeaterMonthName), tokens[1].get_tag(ScalarDay).type, tokens[2..tokens.size], options)
 		end
+
+                def handle_sd_rmn_on(tokens, options) #:nodoc:
+                  if tokens.size > 3
+                    handle_m_d(tokens[3].get_tag(RepeaterMonthName), tokens[2].get_tag(ScalarDay).type, tokens[0..1], options)
+                  else
+                    handle_m_d(tokens[2].get_tag(RepeaterMonthName), tokens[1].get_tag(ScalarDay).type, tokens[0..0], options)
+                  end
+                end
 
 		def handle_rmn_sd_on(tokens, options) #:nodoc:
 			if tokens.size > 3
