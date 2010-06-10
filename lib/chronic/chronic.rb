@@ -135,7 +135,7 @@ module Chronic
 		def pre_normalize(text) #:nodoc:
 			normalized_text = text.to_s
 			normalized_text = numericize_numbers(normalized_text)
-			normalized_text.gsub!(/['",]/, '')
+			normalized_text.gsub!(/['",]/, ' ')
 			normalized_text.gsub!(/(\d+\:\d+)\.(\d+)/, '\1\2')
 			normalized_text.gsub!(/ \-(\d{4})\b/, ' tzminus\1')
 			normalized_text.gsub!(/([\/\-\,\@])/) { ' ' + $1 + ' ' }
