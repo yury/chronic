@@ -34,6 +34,7 @@ module Chronic
 						Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :repeater_month_name, :ordinal_day], :handle_rmn_od_on),
 						Handler.new([:repeater_month_name, :scalar_year], :handle_rmn_sy),
 						Handler.new([:scalar_day, :repeater_month_name, :scalar_year, :separator_at?, 'time?'], :handle_sd_rmn_sy),
+						Handler.new([:scalar_year, :scalar_day, :repeater_month_name, :separator_at?, 'time?'], :handle_sy_sd_rmn),
 						@middle_endian_handler,
 						@little_endian_handler,
 						Handler.new([:scalar_year, :separator_slash_or_dash, :scalar_month, :separator_slash_or_dash, :scalar_day, :separator_at?, 'time?'], :handle_sy_sm_sd),
@@ -244,6 +245,12 @@ module Chronic
 			rescue ArgumentError
 				nil
 			end
+		end
+
+		def handle_sy_sd_rmn(tokens, options) #:nodoc:
+			new_tokens = [tokens[2], tokens[1], tokens[0]]
+			time_tokens = tokens.last(tokens.size - 3)
+			self.handle_rmn_sd_sy(new_tokens + time_tokens, options)
 		end
 
 		def handle_sd_rmn_sy(tokens, options) #:nodoc:
