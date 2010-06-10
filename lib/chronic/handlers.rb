@@ -32,6 +32,7 @@ module Chronic
                                                 Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :ordinal_day, :repeater_month_name], :handle_od_rmn_on),
 						Handler.new([:repeater_month_name, :ordinal_day, :separator_at?, 'time?'], :handle_rmn_od),
 						Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :repeater_month_name, :ordinal_day], :handle_rmn_od_on),
+						Handler.new([:repeater_time, :repeater_day_portion?, :separator_on?, :repeater_month_name, :scalar_day, :scalar_year], :handle_rmn_sd_sy_on),
 						Handler.new([:repeater_month_name, :scalar_year], :handle_rmn_sy),
 						Handler.new([:scalar_day, :repeater_month_name, :scalar_year, :separator_at?, 'time?'], :handle_sd_rmn_sy),
 						Handler.new([:scalar_year, :scalar_day, :repeater_month_name, :separator_at?, 'time?'], :handle_sy_sd_rmn),
@@ -170,6 +171,21 @@ module Chronic
 				handle_m_d(tokens[2].get_tag(RepeaterMonthName), tokens[3].get_tag(ScalarDay).type, tokens[0..1], options)
 			else
 				handle_m_d(tokens[1].get_tag(RepeaterMonthName), tokens[2].get_tag(ScalarDay).type, tokens[0..0], options)
+			end
+		end
+
+		def handle_rmn_sd_sy_on(tokens, options) #:nodoc:
+			month = tokens[-3].get_tag(RepeaterMonthName).index
+			day = tokens[-2].get_tag(ScalarDay).type
+			year = tokens.last.get_tag(ScalarYear).type
+
+			time_tokens = tokens.first(tokens.size - 3)
+
+			begin
+				day_start = Chronic.time_class.local(year, month, day)
+				day_or_time(day_start, time_tokens, options)
+			rescue ArgumentError
+				nil
 			end
 		end
 

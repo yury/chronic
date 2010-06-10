@@ -92,6 +92,11 @@ class TestParsing < Test::Unit::TestCase
 		time = parse_now("2010 3 feb at 4", :ambiguous_time_range => :none)
 		assert_equal Time.local(2010, 2, 3, 4), time
 
+		# rm_sd_sy_on
+
+		time = parse_now("19:00 may 1 2013")
+		assert_equal Time.local(2013, 5, 1, 19), time
+
 		# rm_sd_sy
 
 		time = parse_now("jan 3 2010")
