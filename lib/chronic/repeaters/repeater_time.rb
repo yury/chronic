@@ -16,12 +16,15 @@ class Chronic::RepeaterTime < Chronic::Repeater #:nodoc:
 		end
 
 		def to_f
-			@time.to_f
+      @time.to_f
 		end
+		
 
 		def to_s
 			@time.to_s + (@ambiguous ? '?' : '')
 		end
+		
+		
 	end
 
 	def initialize(time, options = {})
@@ -64,30 +67,33 @@ class Chronic::RepeaterTime < Chronic::Repeater #:nodoc:
 		unless @current_time
 			first = true
 			midnight = Chronic.time_class.local(@now.year, @now.month, @now.day)
-
 			yesterday_midnight = midnight - full_day
 			tomorrow_midnight = midnight + full_day
-
+			
 			offset_fix = midnight.gmt_offset - tomorrow_midnight.gmt_offset
+			
 			tomorrow_midnight += offset_fix
-
 			catch :done do
 				if pointer == :future
 					if @type.ambiguous?
+					  @type = @type.to_f
 						[midnight + @type + offset_fix, midnight + half_day + @type + offset_fix, tomorrow_midnight + @type].each do |t|
 							(@current_time = t; throw :done) if t >= @now
 						end
 					else
+					  @type = @type.to_f
 						[midnight + @type + offset_fix, tomorrow_midnight + @type].each do |t|
 							(@current_time = t; throw :done) if t >= @now
 						end
 					end
 				else # pointer == :past
 					if @type.ambiguous?
+					  @type = @type.to_f
 						[midnight + half_day + @type + offset_fix, midnight + @type + offset_fix, yesterday_midnight + @type + half_day].each do |t|
 							(@current_time = t; throw :done) if t <= @now
 						end
 					else
+					  @type = @type.to_f
 						[midnight + @type + offset_fix, yesterday_midnight + @type].each do |t|
 							(@current_time = t; throw :done) if t <= @now
 						end
