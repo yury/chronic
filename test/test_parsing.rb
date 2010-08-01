@@ -38,6 +38,15 @@ class TestParsing < Test::Unit::TestCase
 		time = parse_now("5 on may 28", :ambiguous_time_range => :none)
 		assert_equal Time.local(2007, 5, 28, 05), time
 
+		# sd_rm
+		time = parse_now("5pm 28 may")
+		assert_equal Time.local(2007, 5, 28, 17), time
+
+		# od_rm
+
+		time = parse_now("5pm 27th of may")
+		assert_equal Time.local(2007, 5, 27, 17), time
+
 		# rm_od
 
 		time = parse_now("may 27th")
@@ -78,6 +87,15 @@ class TestParsing < Test::Unit::TestCase
 
 		time = parse_now("dec 79")
 		assert_equal Time.local(1979, 12, 16, 12), time
+
+		# sy_sd_rm
+		time = parse_now("2010 3 feb at 4", :ambiguous_time_range => :none)
+		assert_equal Time.local(2010, 2, 3, 4), time
+
+		# rm_sd_sy_on
+
+		time = parse_now("19:00 may 1 2013")
+		assert_equal Time.local(2013, 5, 1, 19), time
 
 		# rm_sd_sy
 
@@ -519,6 +537,9 @@ class TestParsing < Test::Unit::TestCase
 
 		time = parse_now("6 months hence")
 		assert_equal Time.local(2007, 2, 16, 14), time
+
+		time = parse_now("2 weeks later")
+		assert_equal Time.local(2006, 8, 30, 14), time
 
 		time = parse_now("3 fortnights hence")
 		assert_equal Time.local(2006, 9, 27, 14), time
